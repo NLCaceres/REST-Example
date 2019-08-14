@@ -36,12 +36,15 @@ class ModelBase : NSObject {
     }
     
     func fromDictionary(_ dict : Dictionary<String, AnyObject>){
-        
+        print("This is the dict: \(dict)")
         // loop through each one of the mappings
-        for (objectKey, jsonKey)  in self.objectMapping() {
+        for (objectKey, jsonKey) in self.objectMapping() {
             
             // set the value
             let jsonValue = dict[jsonKey]
+            print("This is the jsonKey: \(jsonKey)")
+            print("This is the jsonValue: \(jsonValue)")
+            print("This is the objectKey: \(objectKey)")
             
             // if it's NSNull type then just skip it
             if(jsonValue is NSNull){

@@ -26,7 +26,6 @@ class ViewController: ViewControllerBase, UITableViewDelegate, UITableViewDataSo
         super.viewWillAppear(animated)
         
         releadTableData()
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,10 +33,7 @@ class ViewController: ViewControllerBase, UITableViewDelegate, UITableViewDataSo
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
     // Tableview Related
-    
     func releadTableData(){
         PostsManager.readPostsWithHandler{
             (posts : Array<Post>?, error: AnyObject?) in
@@ -51,12 +47,8 @@ class ViewController: ViewControllerBase, UITableViewDelegate, UITableViewDataSo
                 self.tableView.reloadData()
                 
             })
-            
         }
-
-        
     }
-    
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -66,7 +58,6 @@ class ViewController: ViewControllerBase, UITableViewDelegate, UITableViewDataSo
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let posts = posts {
             return posts.count
-            
         }
         return 0
     }
@@ -90,23 +81,23 @@ class ViewController: ViewControllerBase, UITableViewDelegate, UITableViewDataSo
         return true;
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
-            
-            ServerAPIManager.sharedInstance.delete(ServerAPIManager.Resources.Posts) { (data, error) -> () in
-                
-                if (error != nil) {
-                    print("Error in deleting this post")
-                }
-                else {
-                    print("Time to delete")
-                    self.posts.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-                }
-                
-            }
-        }
-    }
+//    func tableView(_ tableView: UITableView, commit editingStyle: .editingStyle, forRowAt indexPath: IndexPath) {
+//        if (editingStyle == UITableViewCellEditingStyle.delete) {
+//
+//            ServerAPIManager.sharedInstance.delete(ServerAPIManager.Resources.Posts) { (data, error) -> () in
+//
+//                if (error != nil) {
+//                    print("Error in deleting this post")
+//                }
+//                else {
+//                    print("Time to delete")
+//                    self.posts.remove(at: indexPath.row)
+//                    tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation)
+//                }
+//
+//            }
+//        }
+//    }
 
 }
 

@@ -11,8 +11,6 @@ class PostsManager : ManagerBase {
     
     
     class func readPostsWithHandler(_ callback:@escaping (_ posts : Array<Post>?, _ error: AnyObject?)->()){
-        
-        
         ServerAPIManager.sharedInstance.readResource(ServerAPIManager.Resources.Posts) {
             (data, error) -> () in
             
@@ -21,21 +19,17 @@ class PostsManager : ManagerBase {
                callback(nil, error)
             
             }else{
-                var posts : Array<Post> =  [Post]()
-                
-                if let items = data as? Array<NSDictionary> { 
-                    for item in items {
-                        let post : Post = Post()
-                        post.fromDictionary(item as! Dictionary<String, AnyObject>, withRootNode: "message")
-                        posts.append(post)
-                        
-                    }
+                var posts : Array<Post>? = [Post]()
+                guard let data = data as? Data else {
+                    print("Data issue")
+                    return
                 }
+                posts = try? JSONDecoder().decode([Post].self, from: data)
+                //print("This is the data: \(String(decoding: data, as: UTF8.self))")
+                
                 callback(posts, nil)
             }
-            
         }
-        
     }
     
     
@@ -48,19 +42,11 @@ class PostsManager : ManagerBase {
             (data, error) -> () in
             
             if error != nil{
-                
                 callback(false, error)
-                
-            }else{
-                
+            }
+            else {
                 callback(true, nil)
             }
-            
-            
         }
-        
-        
-        
     }
-    
 }

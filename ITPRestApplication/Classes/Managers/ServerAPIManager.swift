@@ -16,12 +16,9 @@ class ServerAPIManager : ManagerBase{
 //        }()
     
     let baseUrl = "http://freezing-cloud-6077.herokuapp.com"
-    
     enum Resources : String {
         case Posts = "messages.json", Resource2 = "resource2", Resource3 = "resource3"
-        
     }
-    
     
     // check out differnt options for singleton patterns,  http://krakendev.io/blog/the-right-way-to-write-a-singleton
 	static let sharedInstance = ServerAPIManager()
@@ -38,8 +35,6 @@ class ServerAPIManager : ManagerBase{
     
     func readResource(_ resource : Resources, callback:@escaping (_ data : AnyObject?, _ error: AnyObject?)->()) -> Void{
         
-        
-        
 		let request : URLRequest = URLRequest(url: URL(string: "\(baseUrl)/\(resource.rawValue)")!)
         
         let session = URLSession.shared
@@ -47,30 +42,19 @@ class ServerAPIManager : ManagerBase{
             (data, response, error) -> Void in
             if error != nil {
                 callback(nil, error as AnyObject?)
-            } else {
-                
-                if let data = data{
-                    
-                    let dict = self.convertJsonDataToDictionary(data)
-                    
-                    callback(dict as AnyObject?, nil)
-                    
-                }else{
-                    
-                    callback(nil, nil)
-                    
-                }
-                
             }
-            
+            else {
+                
+                if let data = data {
+                    let dict = self.convertJsonDataToDictionary(data)
+                    callback(data as AnyObject?, nil)
+                }
+                else {
+                    callback(nil, nil)
+                }
+            }
         })
         task.resume()
-		
-
-
-		
-		
-        
     }
     
     func createResource(_ resource : Resources, data : Dictionary<String, AnyObject>, callback:@escaping (_ data : AnyObject?, _ error: AnyObject?)->()) -> Void{
@@ -91,15 +75,11 @@ class ServerAPIManager : ManagerBase{
                 (data, response, error) -> Void in
                 
                 if let data = data{
-                    
                     let dict =  self.convertJsonDataToDictionary(data)
-                    callback(dict as AnyObject?, nil)
-                    
-                    
-                }else{
-                    
+                    callback(data as AnyObject?, nil)
+                }
+                else {
                     callback(nil, nil)
-                    
                 }
                 
         }) 
@@ -119,25 +99,16 @@ class ServerAPIManager : ManagerBase{
             (data, response, error) -> Void in
             
             if error != nil {
-                
                 print("Error in deleting process")
                 callback(nil, error as AnyObject?)
-                
             }
-        
             else {
-                
                 print("Delete has gone through")
                 callback(nil, error as AnyObject?)
-                
             }
-            
         })
-        
         task.resume()
-        
     }
-    
     
     func convertDataToString(_ inputData : Data) -> NSString?{
         
@@ -147,17 +118,14 @@ class ServerAPIManager : ManagerBase{
         
     }
     
-    
     func convertDictionaryToJsonData(_ inputDict : Dictionary<String, AnyObject>) -> Data?{
         
         do{
             return try JSONSerialization.data(withJSONObject: inputDict, options:JSONSerialization.WritingOptions.prettyPrinted)
-            
-        }catch let error as NSError{
-            print(error)
-            
         }
-        
+        catch let error as NSError{
+            print(error)
+        }
         return nil
     }
     
